@@ -1,0 +1,21 @@
+$schema: https://raw.githubusercontent.com/oyvindberg/bleep/master/schema.json
+$version: 0.0.3
+projects:
+  migrator:
+    dependencies: com.lihaoyi::fansi:0.3.1
+    extends: template-common
+    platform:
+      mainClass: com.foo.App
+  tests:
+    dependencies: org.scalatest::scalatest:3.2.13
+    dependsOn: migrator
+    extends: template-common
+    isTestProject: true
+templates:
+  template-common:
+    platform:
+      name: jvm
+    scala:
+      options: -encoding utf8 -feature -unchecked
+      strict: true
+      version: 3.4.1
