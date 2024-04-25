@@ -4,39 +4,40 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    bleepSrc.url = "github:KristianAN/bleep-flake"; # The bleep flake
   };
 
   outputs =
     { self
     , nixpkgs
     , flake-utils
+    , bleepSrc
     , ...
     }:
     flake-utils.lib.eachDefaultSystem (
       system:
       let
 
-        bleepSrc = import ./bleep.nix { flake-utils = flake-utils; pkgs = pkgs; };
         pkgs = import nixpkgs {
           inherit system;
           overlays = [
             (f: p: {
-              scala-cli = p.scala-cli.override { jre = p.temurin-bin-17; };
-              bleep = bleepSrc.defaultPackage.${system}; # Your bleep system binary
+              bleep = bleepSrc.defaultPackage.${system};
             })
           ];
         };
 
 
-        jdk = pkgs.temurin-bin-17;
+        jdk = pkgs.temurin-bin-21;
 
         jvmInputs = with pkgs; [
           jdk
-          scala-cli
           bleep
         ];
 
-        jvmHook = '''';
+        jvmHook = ''
+          export JAVA_HOME=${jdk}
+        '';
       in
       {
         devShells.default = pkgs.mkShell {

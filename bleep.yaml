@@ -18,4 +18,4 @@ templates:
     scala:
       options: -encoding utf8 -feature -unchecked
       strict: true
-      version: 3.4.1
+      version: 3.3.3
